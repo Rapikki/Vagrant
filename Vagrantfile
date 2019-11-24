@@ -30,25 +30,28 @@ Vagrant.configure("2") do |config|
   #end
   config.vm.define "cicd", primary: true do |cicd|
     cicd.vm.box = "rapiki_cicd/ubuntu18.04"
+	config.vm.network "private_network", ip: "192.168.0.1"
   end
   config.vm.define "lb" do |lb|
     lb.vm.box = "generic/ubuntu1804"
+	config.vm.network "private_network", ip: "192.168.0.2"
   end
   config.vm.define "db" do |db|
     db.vm.box = "damianlewis/ubuntu-18.04-mysql"
+	config.vm.network "private_network", ip: "192.168.0.3"
 	#config.vm.network "public_network", bridge: "en1:"
   end
-  
   config.vm.define "apl_1" do |apl_1|
+	config.vm.network "private_network", ip: "192.168.0.4"
     apl_1.vm.box = "scytl-rs/xenial64_tomcat8-oraclexe"
   end
   config.vm.define "apl_2" do |apl_2|
+	config.vm.network "private_network", ip: "192.168.0.2"
     apl_2.vm.box = "scytl-rs/xenial64_tomcat8-oraclexe"
   end
    config.vm.network "forwarded_port", guest: 80, host: 8080, protocol: "tcp", auto_correct: true
    
-   #This is how you can define two guests to use the same box with a private network. In addition during the boot, I used a provisioner to change the hostname of each guest:
-
+  #This is how you can define two guests to use the same box with a private network. In addition during the boot, I used a provisioner to change the hostname of each guest:
 #Vagrant.configure("2") do |config|
   #config.vm.box = "MY_LAMP_UBUNTU16.04"
   #config.vm.box_url = "file:/Users/parau/aut/MY_LAMP_UBUNTU16.04.box"
@@ -61,6 +64,20 @@ Vagrant.configure("2") do |config|
  # vm2.vm.provision :shell, inline: "hostname vm2"
   #end
 #end
+   
+   #Another networking feature is port forwarding between host and guest and let’s say that you would like to forward TCP 8080 from host to TCP 80 on guest:
+
+#parau-mbp:aut parau$ cat Vagrantfile
+#Vagrant.configure("2") do |config|
+  #config.vm.box = "MY_LAMP_UBUNTU16.04"
+  #config.vm.box_url = "file:/Users/parau/aut/MY_LAMP_UBUNTU16.04.box"
+  #config.vm.network "forwarded_port", guest: 80, host: 8080, protocol: "tcp", auto_correct: true
+  #config.vm.network "private_network", ip: "192.168.10.10"
+  #config.vm.network "public_network", bridge:"en5: Thunderbolt Ethernet"
+#end
+#parau-mbp:aut parau$
+   
+   
    
   #config.vm.define "balancer" do |balancer|
     #balancer.vm.box = "ngnix"
