@@ -47,20 +47,20 @@ Vagrant.configure("2") do |config|
   end
    config.vm.network "forwarded_port", guest: 80, host: 8080, protocol: "tcp", auto_correct: true
    
-   This is how you can define two guests to use the same box with a private network. In addition during the boot, I used a provisioner to change the hostname of each guest:
+   #This is how you can define two guests to use the same box with a private network. In addition during the boot, I used a provisioner to change the hostname of each guest:
 
-Vagrant.configure("2") do |config|
-  config.vm.box = "MY_LAMP_UBUNTU16.04"
-  config.vm.box_url = "file:/Users/parau/aut/MY_LAMP_UBUNTU16.04.box"
-  config.vm.define "vm-1" do |vm1|
-  vm1.vm.network "private_network", ip: "192.168.10.10"
-  vm1.vm.provision :shell, inline: "hostname vm1"
-  end
-  config.vm.define "vm-2" do |vm2|
-  vm2.vm.network "private_network", ip: "192.168.10.11"
-  vm2.vm.provision :shell, inline: "hostname vm2"
-  end
-end
+#Vagrant.configure("2") do |config|
+  #config.vm.box = "MY_LAMP_UBUNTU16.04"
+  #config.vm.box_url = "file:/Users/parau/aut/MY_LAMP_UBUNTU16.04.box"
+  #config.vm.define "vm-1" do |vm1|
+  #vm1.vm.network "private_network", ip: "192.168.10.10"
+  #vm1.vm.provision :shell, inline: "hostname vm1"
+  #end
+  #config.vm.define "vm-2" do |vm2|
+  #vm2.vm.network "private_network", ip: "192.168.10.11"
+ # vm2.vm.provision :shell, inline: "hostname vm2"
+  #end
+#end
    
   #config.vm.define "balancer" do |balancer|
     #balancer.vm.box = "ngnix"
