@@ -31,10 +31,12 @@ Vagrant.configure("2") do |config|
   config.vm.define "cicd", primary: true do |cicd|
     cicd.vm.box = "rapiki_cicd/ubuntu18.04"
 	config.vm.network "private_network", ip: "192.168.0.1"
+	config.vm.network "forwarded_port", guest: 8080, host: 8080, protocol: "tcp", auto_correct: true
   end
   config.vm.define "lb" do |lb|
     lb.vm.box = "generic/ubuntu1804"
 	config.vm.network "private_network", ip: "192.168.0.2"
+	config.vm.provision "shell", path: "provision_lb.sh"
   end
   config.vm.define "db" do |db|
     db.vm.box = "damianlewis/ubuntu-18.04-mysql"
