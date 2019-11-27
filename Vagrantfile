@@ -30,32 +30,42 @@ Vagrant.configure("2") do |config|
   #end
   config.vm.define "cicd", primary: true do |cicd|
     cicd.vm.box = "rapiki_cicd/ubuntu18.04"
-	config.vm.network "private_network", ip: "192.168.0.1"
-	config.vm.network "forwarded_port", guest: 8080, host: 8080, protocol: "tcp", auto_correct: true
+	cicd.vm.network "private_network", ip: "192.168.0.1"
+	cicd.vm.network "forwarded_port", guest: 8080, host: 8080, protocol: "tcp", auto_correct: true
+	cicd.vm.hostname = 'cicd'
   end
   config.vm.define "lb" do |lb|
     lb.vm.box = "generic/ubuntu1804"
-	config.vm.network "private_network", ip: "192.168.0.2"
-	config.vm.provision "shell", path: "provision_lb.sh"
+	lb.vm.network "private_network", ip: "192.168.0.2"
+	lb.vm.provision "shell", path: "provision_lb.sh"
+	lb.vm.synced_folder "webapps/", "/home/vagrant/webapps"
+	lb.vm.network "forwarded_port", guest: 80, host: 8282, protocol: "tcp", auto_correct: true
+	lb.vm.hostname = 'lb' 
+	#lb.vm.provision :shell, inline: "hostname lb"
   end
   config.vm.define "db" do |db|
     db.vm.box = "damianlewis/ubuntu-18.04-mysql"
-	config.vm.network "private_network", ip: "192.168.0.3"
-	config.vm.provision "shell", path: "provision_db.sh"
+	db.vm.network "private_network", ip: "192.168.0.3"
+	db.vm.provision "shell", path: "provision_db.sh"
 	#config.vm.network "public_network", bridge: "en1:"
+	db.vm.hostname = 'db'
   end
   config.vm.define "apl_1" do |apl_1|
-	config.vm.network "private_network", ip: "192.168.0.4"
+	apl_1.vm.network "private_network", ip: "192.168.0.4"
     apl_1.vm.box = "generic/ubuntu1804"
-	config.vm.box_version = "2.0.4"
-	config.vm.synced_folder "webapps/", "/home/vagrant/webapps"
-	config.vm.provision "shell", path: "provision_apl_web.sh"
+	apl_1.vm.box_version = "2.0.4"
+	apl_1.vm.synced_folder "webapps/", "/home/vagrant/webapps"
+	apl_1.vm.provision "shell", path: "provision_apl_web.sh"
+	apl_1.vm.hostname = 'apl-1'
+	apl_1.vm.network "forwarded_port", guest: 8080, host: 8484, protocol: "tcp", auto_correct: true
   end
   config.vm.define "apl_2" do |apl_2|
-	config.vm.network "private_network", ip: "192.168.0.5"
+	apl_2.vm.network "private_network", ip: "192.168.0.5"
     apl_2.vm.box = "generic/ubuntu1804"
-	config.vm.synced_folder "webapps/", "/home/vagrant/webapps"
-	config.vm.provision "shell", path: "provision_apl_web.sh"
+	apl_2.vm.synced_folder "webapps/", "/home/vagrant/webapps"
+	apl_2.vm.provision "shell", path: "provision_apl_web.sh"
+	apl_2.vm.hostname = 'apl-2'
+	apl_2.vm.network "forwarded_port", guest: 8080, host: 8585, protocol: "tcp", auto_correct: true
   end
   #config.vm.define "mon" do |mon|
   #config.vm.box = "wow73611/zabbix-server"
