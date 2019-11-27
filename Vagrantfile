@@ -41,17 +41,30 @@ Vagrant.configure("2") do |config|
   config.vm.define "db" do |db|
     db.vm.box = "damianlewis/ubuntu-18.04-mysql"
 	config.vm.network "private_network", ip: "192.168.0.3"
+	config.vm.provision "shell", path: "provision_db.sh"
 	#config.vm.network "public_network", bridge: "en1:"
   end
   config.vm.define "apl_1" do |apl_1|
 	config.vm.network "private_network", ip: "192.168.0.4"
-    apl_1.vm.box = "scytl-rs/xenial64_tomcat8-oraclexe"
+    apl_1.vm.box = "generic/ubuntu1804"
+	config.vm.box_version = "2.0.4"
+	config.vm.synced_folder "webapps/", "/home/vagrant/webapps"
+	config.vm.provision "shell", path: "provision_apl_web.sh"
   end
   config.vm.define "apl_2" do |apl_2|
-	config.vm.network "private_network", ip: "192.168.0.2"
-    apl_2.vm.box = "scytl-rs/xenial64_tomcat8-oraclexe"
+	config.vm.network "private_network", ip: "192.168.0.5"
+    apl_2.vm.box = "generic/ubuntu1804"
+	config.vm.synced_folder "webapps/", "/home/vagrant/webapps"
+	config.vm.provision "shell", path: "provision_apl_web.sh"
   end
-   config.vm.network "forwarded_port", guest: 80, host: 8080, protocol: "tcp", auto_correct: true
+  #config.vm.define "mon" do |mon|
+  #config.vm.box = "wow73611/zabbix-server"
+  #config.vm.box_version = "20170411.0"
+  #end
+  
+  
+  
+   #config.vm.network "forwarded_port", guest: 80, host: 8080, protocol: "tcp", auto_correct: true
    
   #This is how you can define two guests to use the same box with a private network. In addition during the boot, I used a provisioner to change the hostname of each guest:
 #Vagrant.configure("2") do |config|
