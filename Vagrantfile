@@ -32,6 +32,7 @@ Vagrant.configure("2") do |config|
     cicd.vm.box = "rapiki_cicd/ubuntu18.04"
 	cicd.vm.network "private_network", ip: "192.168.0.1"
 	cicd.vm.network "forwarded_port", guest: 8080, host: 8080, protocol: "tcp", auto_correct: true
+	cicd.vm.network "forwarded_port", guest: 22, host: 2210, protocol: "tcp", auto_correct: true
 	cicd.vm.hostname = 'cicd'
   end
   config.vm.define "lb" do |lb|
@@ -40,6 +41,7 @@ Vagrant.configure("2") do |config|
 	lb.vm.provision "shell", path: "provision_lb.sh"
 	lb.vm.synced_folder "webapps/", "/home/vagrant/webapps"
 	lb.vm.network "forwarded_port", guest: 80, host: 8282, protocol: "tcp", auto_correct: true
+	lb.vm.network "forwarded_port", guest: 22, host: 2211, protocol: "tcp", auto_correct: true
 	lb.vm.hostname = 'lb' 
 	#lb.vm.provision :shell, inline: "hostname lb"
   end
@@ -48,6 +50,7 @@ Vagrant.configure("2") do |config|
 	db.vm.network "private_network", ip: "192.168.0.3"
 	db.vm.provision "shell", path: "provision_db.sh"
 	#config.vm.network "public_network", bridge: "en1:"
+	db.vm.network "forwarded_port", guest: 22, host: 2212, protocol: "tcp", auto_correct: true
 	db.vm.hostname = 'db'
   end
   config.vm.define "apl_1" do |apl_1|
@@ -57,6 +60,7 @@ Vagrant.configure("2") do |config|
 	apl_1.vm.synced_folder "webapps/", "/home/vagrant/webapps"
 	apl_1.vm.provision "shell", path: "provision_apl_web.sh"
 	apl_1.vm.hostname = 'apl-1'
+	apl_1.vm.network "forwarded_port", guest: 22, host: 2214, protocol: "tcp", auto_correct: true
 	apl_1.vm.network "forwarded_port", guest: 8080, host: 8484, protocol: "tcp", auto_correct: true
   end
   config.vm.define "apl_2" do |apl_2|
@@ -65,6 +69,7 @@ Vagrant.configure("2") do |config|
 	apl_2.vm.synced_folder "webapps/", "/home/vagrant/webapps"
 	apl_2.vm.provision "shell", path: "provision_apl_web.sh"
 	apl_2.vm.hostname = 'apl-2'
+	apl_2.vm.network "forwarded_port", guest: 22, host: 2215, protocol: "tcp", auto_correct: true
 	apl_2.vm.network "forwarded_port", guest: 8080, host: 8585, protocol: "tcp", auto_correct: true
   end
   #config.vm.define "mon" do |mon|
