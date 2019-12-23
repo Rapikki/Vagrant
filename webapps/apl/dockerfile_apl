@@ -1,0 +1,38 @@
+FROM debian
+
+MAINTAINER dimensionco@gmail.com
+
+RUN mkdir /opt/tomcat/
+
+WORKDIR /opt/tomcat
+
+RUN apt update && apt install default-jdk -y && java -version
+RUN groupadd tomcat && useradd -s /bin/false -g tomcat -d /opt/tomcat tomcat && \
+    cd /tmp && \
+    apt-get -y install curl && \
+    curl -O http://mirror.cc.columbia.edu/pub/software/apache/tomcat/tomcat-9/v9.0.30/bin/apache-tomcat-9.0.30.tar.gz && \
+    tar xzvf apache-tomcat-9*tar.gz -C /opt/tomcat --strip-components=1 && \
+    cd /opt/tomcat && \
+   chgrp -R tomcat /opt/tomcat && \
+   chmod -R g+r conf && \
+   chmod g+x conf && \
+   chown -R tomcat webapps/ work/ temp/ logs/ 
+   
+   # cd /home/vagrant && \ 
+   # cp webapps/context.xml /opt/tomcat/webapps/manager/META-INF/context.xml && \
+   # cp webapps/context.xml /opt/tomcat/webapps/host-manager/META-INF/context.xml && \
+   # cp webapps/tomcat-users.xml /opt/tomcat/conf/tomcat-users.xml && \
+
+   # cp webapps/tomcat.service /etc/systemd/system/ && \
+   # systemctl daemon-reload && \
+   # systemctl start tomcat && \
+   # ufw allow 8087 && \
+   # systemctl enable tomcat && \
+	
+WORKDIR /opt/tomcat/webapps
+
+
+#EXPOSE 8087
+
+CMD ["/opt/tomcat/bin/catalina.sh", "run"]
+

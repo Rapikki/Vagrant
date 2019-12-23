@@ -15,7 +15,7 @@ sudo useradd -s /bin/false -g tomcat -d /opt/tomcat tomcat
 # Download Tomcat
 cd /tmp
 sudo apt-get -y install curl
-curl -O http://mirror.cc.columbia.edu/pub/software/apache/tomcat/tomcat-9/v9.0.29/bin/apache-tomcat-9.0.29.tar.gz
+curl -O http://mirror.cc.columbia.edu/pub/software/apache/tomcat/tomcat-9/v9.0.30/bin/apache-tomcat-9.0.30.tar.gz
 
 # Extract into target directory
 sudo mkdir /opt/tomcat

@@ -28,9 +28,26 @@ Vagrant.configure("2") do |config|
   #config.vm.box_version = "1"
   
   #end
+  config.vm.define "dh", primary: true do |dh|
+    dh.vm.box = "generic/debian10"
+	dh.vm.network "private_network", ip: "192.168.0.6"
+	dh.vm.synced_folder "webapps/", "/home/vagrant/webapps"
+	#dh.vm.network "forwarded_port", guest: 8080, host: 8080, protocol: "tcp", auto_correct: true
+	dh.vm.network "forwarded_port", guest: 22, host: 2216, protocol: "tcp", auto_correct: true
+	dh.vm.hostname = 'dh'
+	dh.vm.provision "shell", path: "provision_dh.sh"
+end
+ 	
+  config.vm.provider :virtualbox do |vb|
+    #vb.name = 'dh'
+    vb.customize ['modifyvm', :id, '--memory', '16256', '--cpus', '4']
+ end
+  
+  
   config.vm.define "cicd", primary: true do |cicd|
     cicd.vm.box = "rapiki_cicd/ubuntu18.04"
 	cicd.vm.network "private_network", ip: "192.168.0.1"
+	cicd.vm.synced_folder "webapps/", "/home/vagrant/webapps"
 	cicd.vm.network "forwarded_port", guest: 8080, host: 8080, protocol: "tcp", auto_correct: true
 	cicd.vm.network "forwarded_port", guest: 22, host: 2210, protocol: "tcp", auto_correct: true
 	cicd.vm.hostname = 'cicd'
@@ -117,9 +134,9 @@ Vagrant.configure("2") do |config|
   # `vagrant box outdated`. This is not recommended.
   config.vm.box_check_update = false
 
-  config.vm.provider "virtualbox" do |vb|
-		vb.memory="2048"
-		end
+  #config.vm.provider "virtualbox" do |vb|
+	#	vb.memory="2048"
+	#	end
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.

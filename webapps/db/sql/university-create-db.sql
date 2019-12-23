@@ -1,0 +1,7 @@
+DROP DATABASE IF EXISTS university;
+DROP USER IF EXISTS test;
+
+CREATE DATABASE university;
+CREATE user 'test'@'%' IDENTIFIED BY 'x@f7uh6H5Rx23fx';
+GRANT ALL PRIVILEGES ON university.* TO 'test'@'%';
+FLUSH PRIVILEGES;
