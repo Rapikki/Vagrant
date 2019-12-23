@@ -51,6 +51,7 @@ end
 	cicd.vm.network "forwarded_port", guest: 8080, host: 8080, protocol: "tcp", auto_correct: true
 	cicd.vm.network "forwarded_port", guest: 22, host: 2210, protocol: "tcp", auto_correct: true
 	cicd.vm.hostname = 'cicd'
+	cicd.vm.box_version = "2"
   end
   config.vm.define "lb" do |lb|
     lb.vm.box = "generic/ubuntu1804"
