@@ -2,6 +2,10 @@ version: '3'
 services:
    lb:
     build:
+    #depends_on:
+    #- db
+    #- apl1
+    #- apl2
       context: ./lb
       dockerfile: dockerfile_lb_nginx
     #volumes:
