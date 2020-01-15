@@ -38,9 +38,31 @@ Vagrant.configure("2") do |config|
 	dh.vm.provision "shell", path: "provision_dh.sh"
 end
  	
+	
+config.vm.define "dp", primary: true do |dp|
+    dp.vm.box = "generic/debian10"
+	dp.vm.network "private_network", ip: "192.168.0.99"
+	dp.vm.synced_folder "webapps/", "/home/vagrant/webapps"
+	dp.vm.network "forwarded_port", guest: 22, host: 2299, protocol: "tcp", auto_correct: true
+	dp.vm.hostname = 'dp'
+	dp.vm.provision "shell", path: "provision_dp.sh"
+end
+	
+	config.vm.define "mon", primary: true do |mon|
+    mon.vm.box = "generic/debian10"
+	mon.vm.network "private_network", ip: "192.168.0.199"
+	mon.vm.synced_folder "webapps/", "/home/vagrant/webapps"
+	mon.vm.network "forwarded_port", guest: 22, host: 2199, protocol: "tcp", auto_correct: true
+	mon.vm.network "forwarded_port", guest: 5601, host: 80, protocol: "tcp", auto_correct: true
+	mon.vm.hostname = 'mon'
+	mon.vm.provision "shell", path: "provision_mon.sh"
+end
+	
+	
+	
   config.vm.provider :virtualbox do |vb|
     #vb.name = 'dh'
-    vb.customize ['modifyvm', :id, '--memory', '16256', '--cpus', '4']
+    vb.customize ['modifyvm', :id, '--memory', '4000', '--cpus', '4']
  end
   
   
